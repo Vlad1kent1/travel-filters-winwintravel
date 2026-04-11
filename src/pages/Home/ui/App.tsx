@@ -1,10 +1,16 @@
+import { useFilterStore } from '@/features/filter-hotels/model/store'
+import { WidgetHotelFilter } from '@/features/filter-hotels/ui/WidgetHotelFilter'
+
 export const App = () => {
+	const { savedFilters } = useFilterStore()
+
 	return (
-		<section className="w-full h-dvh flex items-center justify-center">
-			{/* eslint-disable-next-line i18next/no-literal-string */}
-			<h1 className="text-6xl text-gray-600 mb-12">
-				WinWinTravel frontend test task
-			</h1>
+		<section className="w-full h-dvh flex flex-col items-center justify-center gap-6 p-4">
+			<WidgetHotelFilter />
+
+			<pre className="w-full max-w-4xl overflow-x-auto rounded-xl bg-slate-950/5 p-4 text-sm text-slate-900">
+				{JSON.stringify(savedFilters, null, 2)}
+			</pre>
 		</section>
 	)
 }

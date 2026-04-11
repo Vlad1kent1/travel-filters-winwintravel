@@ -1,0 +1,17 @@
+{
+	"common": {
+		"close": "Close"
+	},
+	"filters": {
+		"title": "Filters",
+		"addFilters": "Add filters",
+		"clearAllParameters": "Clear all parameters",
+		"apply": "Apply",
+		"confirmClearTitle": "Are you sure you want to reset all filters?",
+		"confirmApplyTitle": "Do you want to apply new filter?",
+		"confirmClearLabel": "Reset all",
+		"confirmApplyLabel": "Apply new filter",
+		"confirmClearCancel": "Keep filters",
+		"confirmApplyCancel": "Use old filter"
+	}
+}

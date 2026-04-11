@@ -2,55 +2,63 @@
 
 ## Task
 
-### What needs to be done
+Technical test task for **WinWinTravel**. This project implements a high-fidelity, responsive hotel filtering system based on a provided Figma design and JSON API data.
 
-The API provides filter data located in the file `filterData.json`
+## What was done
 
-Based on this data, create a filter modal window — [Figma design](https://www.figma.com/file/cnBVURUTntc8peGEfKexoY/WWT-Test-task?type=design&node-id=0%3A1&mode=design&t=GZ0EY5BJ6KB7iy02-1)
+I created button with logic of adding filters `WidgetHotelFilter` and modals `PopupFilter` and `PopupConfirm`. The app starts by fetching filter options and displaying them in a modal window when the user clicks the "Add filters" button. If the user has already selected some filters, the app remembers them and pre-fills the checkboxes automatically in `PopupFilter`.
 
-The design should closely follow the layout. If indentations differ slightly in the layout — make them consistent across the modal
+When the user finishes picking filters and clicks "Apply" or "Clear all," the app doesn't just save them immediately. Instead, it closes `PopupFilter` modal and shows `PopupConfirm` modal to make sure that the user didn't click it by mistake. Once the user confirms, the data is saved to a global store that keeps their choices safe even if the user refreshes the page or close browser. The user can always see the current state of the user's filters in a dedicated JSON preview on the homepage.
 
-The modal window should be opened via a button on the homepage
+To ensure a great experience on any device, I made the system adaptive: on a computer, the user see a classic popup in the middle of the screen, but on a phone, it transforms into a convenient "bottom sheet" that slides up from the bottom. This works thanks to the `useMediaQuery` hook and all the logic is described in the component in `shared\ui\popup.tsx`.
 
-When opening the filter modal, if the user has already selected some data previously, it should be pre-filled in the modal
+## Core technologies
 
-The user should be able to modify the data and click the `Apply` button. This action should open a confirmation dialog
+- **React 19 & TypeScript**: For type-safe, modern component development.
+- **Zustand**: Chosen for global state management due to its lightweight nature and excellent support for `persist` middleware (Session/Local Storage).
+- **Tailwind CSS**: Used for rapid, mobile-first styling.
+- **React Query**: For efficient data fetching and caching of `filterData.json`.
+- **i18next**: Configured for internationalization (as per project requirements).
 
-- If the user confirms the changes — the selected data should be saved to the global state (`App`)
-- If the user cancels — keep the previously saved data without applying the new changes
+## Additional technologies added
 
-Display the current selected filter data on the homepage in JSON format (no design required, just for debug/visibility)
+- **[shadcn/ui](https://ui.shadcn.com/)**:
+  - **Why?** It provides high-quality, accessible (Radix UI-based) primitive components. Instead of "reinventing the wheel" for Checkboxes and Modals, I used shadcn to ensure WAI-ARIA compliance while maintaining full control over the styling to match the Figma design exactly.
+- **[Vaul](https://github.com/emilkowalski/vaul)**:
+  - **Why?** Specifically added to handle the Mobile Drawer (Bottom Sheet) experience, which offers a superior native-like feel on mobile devices compared to standard centered dialogs. It is automatically installed with shadcn/ui drawer.
+- **[Lucide React](https://lucide.dev/)**: For consistent, lightweight iconography. It is automatically installed with shadcn/ui.
 
-The project must include a GitHub Action that automatically checks the code
+## Architecture
 
-Types:
+### 1. **Feature-Sliced Design (FSD)**
 
-- `FilterItem` — input data format from API / `filterData.json`
-- `SearchRequestFilter` — output data format to be displayed on the homepage
+The project follows **FSD** methodology:
 
-### What technologies to use
+- **`shared`**: UI (Buttons, Text, Checkbox via shadcn), hooks (`useMediaQuery`), and API types.
+- **`features/filter-hotels`**: Contains the "Smart" logic.
+  - `model/`: Zustand store (`useFilterStore`).
+  - `ui/`: Components (`HotelFilterFlow`, `PopupConfirm`, `PopupFilter`)
+- **`pages`**: The composition layer (Homepage).
 
-Required:
+### 2. **Adaptive Popups (Dialog vs Drawer)**
 
-- Git with `Conventional Commits`
-- Semantic HTML layout
-- React
-- react-query
-- tailwindcss
-- i18n
-- zustand
+Instead of a simple modal, I built a responsive system that adapts to the screen size:
 
-You may use other technologies already installed in the project, or install additional ones if needed
+- **On Desktop:** It shows a centered Dialog with a clean layout and consistent 32px padding.
+- **On Mobile (up to 375px):** It automatically switches to a Bottom Drawer.
+  I chose this because a "bottom sheet" is much more natural for mobile users and feels like a native app. This logic is handled by a custom useMediaQuery hook and a shared Popup wrapper.
 
-If you install any new technology, describe why you added it and what it’s used for in some file
+## Project structure
 
-### How to submit the task
-
-- Create a **public** copy(not fork) of the repository, preserving the full commit history
-- Complete the task in this private repository
-- Inform HR that the task is complete and ready for review
-
-Also, please let us know upfront whether you would like detailed feedback (what exactly was wrong and a score), or if a simple acceptance or rejection response is sufficient
+```text
+src/
+├── pages/            # Homepage & JSON Debug view
+├── features/         # Business logic: filter-hotels
+│   └── filter-hotels/
+│       ├── model/    # Zustand Store (Persistence)
+│       └── ui/       # Chained Popups & Logic
+├── shared/           # Atomic UI (shadcn/ui), API types, & Utils
+```
 
 ## How to set up the project
 
